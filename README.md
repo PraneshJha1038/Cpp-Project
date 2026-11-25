@@ -1,45 +1,30 @@
 # ShadowVault
 
-An interactive, turn-based terminal dungeon crawler written in **C++20**, designed to showcase clean Object-Oriented Programming (OOP) principles, RAII resource management, and design patterns.
+**ShadowVault** is an interactive, turn-based terminal dungeon crawler written in **C++20**. It is designed to demonstrate clean Object-Oriented Programming (OOP) principles, RAII memory management (`std::unique_ptr`), and classic design patterns in a playable CLI game.
 
-## OOP Architecture & Design
+## Documentation
 
-- **Abstraction & Encapsulation**:
-  - `Entity` (`include/core/Entity.hpp`) is the abstract base class for all named world objects, encapsulating unique IDs, names, and descriptions.
-  - `Stats` (`include/core/Stats.hpp`) encapsulates vitality and combat math (`hp`, `maxHp`, `attack`, `defense`, `critChance`).
-- **Inheritance & Runtime Polymorphism**:
-  - **Items (`include/items/`)**: `Item` -> `Weapon`, `Armor`, and `Consumable` -> `HealingPotion`, `PowerElixir`. Each overrides `use(Player&)` and `describe()`.
-  - **Characters (`include/characters/`)**: `Character` -> `Player` and `Enemy` -> `Goblin`, `SkeletonKnight`, `ShadowDragon`. Each enemy implements its own polymorphic `takeTurn(Player&, std::mt19937&)` AI and `getBattleCry()`.
-- **Command Pattern (`include/game/`)**:
-  - `Command` interface with concrete commands (`LookCommand`, `MoveCommand`, `TakeCommand`, `UseCommand`, `AttackCommand`, `InventoryCommand`, `StatsCommand`, `HelpCommand`, `QuitCommand`) created by `CommandParser`.
-- **Ownership & Modern C++**:
-  - `std::unique_ptr` manages polymorphic objects in `Room`, `DungeonMap`, `Player`, and `CommandParser`.
+- **[Guide.md](Guide.md)** — Complete player handbook: how to build, run, play, and master the game.
+- **[workflow.md](workflow.md)** — End-to-end execution workflow and a file-by-file reference of every file in the repository.
 
-## Build & Run
+## Key OOP Highlights
+
+- **Abstraction & Encapsulation**: `Entity` abstract base class and `Stats` value struct (`include/core/`).
+- **Polymorphic Item Hierarchy**: `Item` -> `Weapon`, `Armor`, and `Consumable` (`HealingPotion`, `PowerElixir`) (`include/items/`).
+- **Polymorphic Character & Enemy AI**: `Character` -> `Player` and `Enemy` (`Goblin`, `SkeletonKnight`, `ShadowDragon`) (`include/characters/`).
+- **World Graph**: `Room` and `DungeonMap` managing interconnected chambers (`include/world/`).
+- **Command Pattern**: `Command`, `CommandParser`, and `GameEngine` (`include/game/`).
+
+## Quick Start
 
 ```bash
+# Configure and build
 cmake -S . -B build
 cmake --build build -j
-```
 
-### Run the Interactive Game
-```bash
+# Play the game
 ./build/shadowvault
-```
 
-### Run Unit Tests
-```bash
+# Run unit tests
 ctest --test-dir build --output-on-failure
 ```
-
-## Gameplay Commands
-
-- `look` (`l`) — Inspect the current room, exits, items, and enemies
-- `go <dir>` or `n` / `s` / `e` / `w` — Move between chambers
-- `take <item>` — Pick up an item from the floor
-- `use <item>` / `equip <item>` — Consume a potion/elixir or equip a weapon/armor
-- `attack [enemy]` — Strike an enemy in combat
-- `inventory` (`inv`) — List carried items
-- `stats` — View your character sheet
-- `help` (`?`) — Show command reference
-- `quit` (`q`) — Exit the game
